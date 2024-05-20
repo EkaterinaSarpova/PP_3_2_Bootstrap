@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link crossorigin="anonymous"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+          rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .logout-button {
+            float: right;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <span style="color: #fff;"><strong th:text="@{{name} (name=${thisUser.getEmail()})}"></strong></span>
+            <span style="color: #fff;">with roles:</span>
+            <span th:each="role : ${thisUser.getRoles()}">
+                <span style="color: #fff;" th:if="${role.getRole()} == 'ROLE_ADMIN'">ADMIN</span>
+                <span style="color: #fff;" th:if="${role.getRole()} == 'ROLE_USER'">USER</span>
+                </span>
+            <!-- Кнопка Logout справа -->
+            <a class="btn btn-dark logout-button" aria-current="page" th:href="@{/logout}">Logout</a>
+        </div>
+</nav>
+
+<br>
+<div class="d-flex align-items-start">
+    <div class="col-2">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-admin-tab" data-bs-toggle="pill" onclick="location.href='/admin'" role="tab"
+               aria-controls="v-pills-admin" aria-selected="true">Admin</a>
+            <a class="nav-link" id="v-pills-user-tab" data-bs-toggle="pill" onclick="location.href='/user'" role="tab"
+               aria-controls="v-pills-user" aria-selected="false">User</a>
+        </div>
+    </div>
+    <div class="col-10">
+        <div class="tab-content bg-light" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-admin" role="tabpanel"
+                 aria-labelledby="v-pills-admin-tab">
+                <div class="d-flex align-content-center flex-wrap">
+                    <h2><b>Admin panel</b></h2>
+                </div>
+                <!-- Nav tabs for different admin functions -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="home-tab"
+                                data-bs-toggle="tab" role="tab"
+                                aria-controls="home" aria-selected="false" onclick="location.href='/admin'">Users table
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="new-user-tab"
+                                data-bs-toggle="tab" role="tab"
+                                aria-controls="profile" aria-selected="true" href="#newUser">New User
+                        </a>
+                    </li>
+                </ul>
+
+                <br>
+                <br>
+
+                <!--ADD -->
+                <div class="tab-content">
+                <div class="tab-pane fade show active" id="newUser">
+                    <div class="card">
+                        <h5 class="card-header">Add new user</h5>
+                        <div class="card-body text-center">
+                            <form th:method="POST" th:action="@{/admin/saveAddUser}" th:object="${user}">
+                                <label class="font-weight-bold" for="name"><b>Name</b></label>
+                                <br>
+                                <input class="form-control" type="text" required minlength="2" maxlength="15"
+                                       name="name"
+                                       id="name"
+                                       style="height: 30px; width: 300px; margin: 0 auto"
+                                       placeholder="name"/>
+                                <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name Error</div>
+                                <br>
+
+                                <label class="font-weight-bold" for="surname"><b>Surname</b></label>
+                                <br>
+                                <input class="form-control" type="text" required minlength="2" maxlength="15"
+                                       name="surname"
+                                       id="surname"
+                                       style="height: 30px; width: 300px; margin: 0 auto"
+                                       placeholder="surname"/>
+                                <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">surname Error</div>
+                                <br>
+
+                                <label class="font-weight-bold" for="email"><b>Email</b></label>
+                                <br>
+                                <input class="form-control" type="text" required minlength="1"
+                                       maxlength="120" name="email"
+                                       id="email"
+                                       style="height: 30px; width: 300px; margin: 0 auto"
+                                       placeholder="email"/>
+                                <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email Error</div>
+                                <br>
+
+                                <label class="font-weight-bold" for="passwordNew"><b>Password</b></label>
+                                <br>
+                                <input class="form-control" type="text" required minlength="3" maxlength="15"
+                                       name="password"
+                                       id="passwordNew"
+                                       style="height: 30px; width: 300px; margin: 0 auto"
+                                       placeholder="password"/>
+                                <br>
+
+                                <label class="font-weight-bold" for="age"><b>Age</b></label>
+                                <br>
+                                <input class="form-control" type="text" step="1" min="0" required
+                                       name="age"
+                                       id="age"
+                                       style="height: 30px; width: 300px; margin: 0 auto"
+                                       placeholder="age"/>
+                                <div style="color:red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">age Error</div>
+                                <br>
+
+
+                                <label class="font-weight-bold"><b>Role</b></label>
+                                <br>
+                                <select id="name_roleNew" name="selectedRoles" size="2" multiple="multiple"
+                                        required>
+                                    <option th:each="role : ${roles}"
+                                            th:value="${role.id}"
+                                            th:text="${role.role}">Role name
+                                    </option>
+                                </select>
+                                <br/>
+                                <div>
+                                    <button type="submit" class="btn btn-success">Add new user</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
