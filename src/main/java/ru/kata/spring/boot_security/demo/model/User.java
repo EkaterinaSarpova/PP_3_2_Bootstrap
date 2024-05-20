@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.*;
 
 @Entity
@@ -21,9 +23,13 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name", nullable = false, unique = true)
+    @Pattern(message = "It can't be a name",
+            regexp = "^[a-zA-Z]+$")
     private String name;
 
     @Column(name = "surname")
+    @Pattern(message = "It can't be a surname",
+            regexp = "^[a-zA-Z]+$")
     private String surname;
 
     @Email
@@ -34,6 +40,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "age")
+    @PositiveOrZero(message = "Age can't be negative")
     private Byte age;
 
     @ManyToMany(fetch = FetchType.LAZY)

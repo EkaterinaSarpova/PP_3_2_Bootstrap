@@ -53,18 +53,17 @@
                 </div>
                 <!-- Nav tabs for different admin functions -->
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="home-tab"
-                                data-bs-toggle="tab" data-bs-target="#home"
-                                type="button" role="tab"
-                                aria-controls="home" aria-selected="true">Users table
-                        </button>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab"
+                                data-bs-toggle="tab" role="tab"
+                                aria-controls="home" aria-selected="true" href="#home">Users table
+                        </a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="new-user-tab"
-                                data-bs-toggle="tab" data-bs-target="#newUser"
-                                type="button" role="tab" aria-controls="profile" aria-selected="false">New User
-                        </button>
+                    <li class="nav-item">
+                        <a class="nav-link" id="new-user-tab"
+                                data-bs-toggle="tab" role="tab"
+                                aria-controls="profile" aria-selected="false" onclick="location.href='/admin/new'">New User
+                        </a>
                     </li>
                 </ul>
 
@@ -130,35 +129,43 @@
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label for="nameUpdate"
-                                                                           class="col-form-label"><b>name</b></label>
+                                                                           class="col-form-label"><b>Name</b></label>
                                                                     <input type="text"
-                                                                           th:value="${user.getName}" name="name"
+                                                                           th:value="${user.getName()}" name="name"
                                                                            class="form-control" id="nameUpdate"
-                                                                           required minlength="2" maxlength="20"/>
+                                                                           minlength="2" maxlength="20"
+                                                                           required pattern="^[a-zA-Z]+$"
+                                                                           title="a word made of Latin letters"/>
+                                                                    <span class="validity"></span>
+                                                                    <p style="color:silver">The name must be a word made of Latin letters</p>
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label for="surnameUpdate"
-                                                                           class="col-form-label"><b>surname</b></label>
+                                                                           class="col-form-label"><b>Surname</b></label>
                                                                     <input type="text"
                                                                            th:value="${user.getSurname()}"
                                                                            name="surname"
                                                                            class="form-control" id="surnameUpdate"
-                                                                           required minlength="2" maxlength="20"/>
+                                                                           minlength="2" maxlength="20"
+                                                                           required pattern="^[a-zA-Z]+$"
+                                                                           title="a word made of Latin letters"/>
+                                                                    <span class="validity"></span>
+                                                                    <p style="color:silver">The surname must be a word made of Latin letters</p>
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label for="emailUpdate"
-                                                                           class="col-form-label"><b>email</b></label>
+                                                                           class="col-form-label"><b>Email</b></label>
                                                                     <input type="text"
                                                                            th:value="${user.getEmail()}" name="email"
                                                                            class="form-control" id="emailUpdate"
-                                                                           required minlength="2" maxlength="20"/>
+                                                                           readonly/>
                                                                 </div>
 
                                                                 <div class="mb-3">
                                                                     <label for="passwordUpdate"
                                                                            class="col-form-label"><b>Password</b></label>
                                                                     <input type="password"
-                                                                           th:value="${user.getPassword}"
+                                                                           th:value="${user.getPassword()}"
                                                                            name="password"
                                                                            class="form-control" id="passwordUpdate"
                                                                            required minlength="2" maxlength="20"/>
@@ -166,10 +173,10 @@
                                                                 <div class="mb-3">
                                                                     <label for="ageUpdate"
                                                                            class="col-form-label"><b>Age</b></label>
-                                                                    <input type="text"
-                                                                           th:value="${user.getAge}" name="age"
+                                                                    <input type="number"
+                                                                           th:value="${user.getAge()}" name="age"
                                                                            class="form-control" id="ageUpdate"
-                                                                           required minlength="2" maxlength="20"/>
+                                                                           required min="0" step="1"/>
                                                                 </div>
 
                                                                 <div class="mb-3">
@@ -229,15 +236,15 @@
                                                                 <div class="modal-body">
                                                                     <div class="mb-3">
                                                                         <label for="nameDelete"
-                                                                               class="col-form-label"><b>First name</b></label>
+                                                                               class="col-form-label"><b>Name</b></label>
                                                                         <input type="text"
-                                                                               th:value="${user.getName}" name="name"
+                                                                               th:value="${user.getName()}" name="name"
                                                                                class="form-control" id="nameDelete"
                                                                                readonly/>
                                                                     </div>
                                                                     <div class="mb-3">
                                                                         <label for="surnameDelete"
-                                                                               class="col-form-label"><b>surname</b></label>
+                                                                               class="col-form-label"><b>Surname</b></label>
                                                                         <input type="text"
                                                                                th:value="${user.getSurname()}"
                                                                                name="surname"
@@ -246,7 +253,7 @@
                                                                     </div>
                                                                     <div class="mb-3">
                                                                         <label for="emailDelete"
-                                                                               class="col-form-label"><b>email</b></label>
+                                                                               class="col-form-label"><b>Email</b></label>
                                                                         <input type="text"
                                                                                th:value="${user.getEmail()}"
                                                                                name="email"
@@ -258,16 +265,16 @@
                                                                         <label for="passwordDelete"
                                                                                class="col-form-label"><b>Password</b></label>
                                                                         <input type="password"
-                                                                               th:value="${user.getPassword}"
+                                                                               th:value="${user.getPassword()}"
                                                                                name="password"
                                                                                class="form-control" id="passwordDelete"
-                                                                               required minlength="2" maxlength="20"/>
+                                                                               readonly/>
                                                                     </div>
                                                                     <div class="mb-3">
                                                                         <label for="ageDelete"
                                                                                class="col-form-label"><b>Age</b></label>
                                                                         <input type="text"
-                                                                               th:value="${user.getAge}" name="age"
+                                                                               th:value="${user.getAge()}" name="age"
                                                                                class="form-control" id="ageDelete"
                                                                                readonly/>
                                                                     </div>
@@ -310,75 +317,7 @@
                             </table>
                         </div>
                     </div>
-                    <!--ADD -->
-                    <div class="tab-pane fade" id="newUser">
-                        <div class="card">
-                            <h5 class="card-header">Add new user</h5>
-                            <div class="card-body text-center">
-                                <form th:method="POST" th:action="@{/admin/saveAddUser}" th:object="${user}">
-                                    <label class="font-weight-bold" for="nameNew"><b>Name</b></label>
-                                    <br>
-                                    <input class="form-control" type="text" required minlength="2" maxlength="15"
-                                           name="name"
-                                           id="nameNew"
-                                           style="height: 30px; width: 300px; margin: 0 auto"
-                                           placeholder="name"/>
-                                    <br>
 
-                                    <label class="font-weight-bold" for="surnameNew"><b>Surname</b></label>
-                                    <br>
-                                    <input class="form-control" type="text" required minlength="2" maxlength="15"
-                                           name="surname"
-                                           id="surnameNew"
-                                           style="height: 30px; width: 300px; margin: 0 auto"
-                                           placeholder="surname"/>
-                                    <br>
-
-                                    <label class="font-weight-bold" for="emailNew"><b>Email</b></label>
-                                    <br>
-                                    <input class="form-control" type="text" step="1" min="0" required minlength="1"
-                                           maxlength="120" name="email"
-                                           id="emailNew"
-                                           style="height: 30px; width: 300px; margin: 0 auto"
-                                           placeholder="email"/>
-                                    <br>
-
-                                    <label class="font-weight-bold" for="passwordNew"><b>Password</b></label>
-                                    <br>
-                                    <input class="form-control" type="text" required minlength="3" maxlength="15"
-                                           name="password"
-                                           id="passwordNew"
-                                           style="height: 30px; width: 300px; margin: 0 auto"
-                                           placeholder="password"/>
-                                    <br>
-
-                                    <label class="font-weight-bold" for="ageNew"><b>Age</b></label>
-                                    <br>
-                                    <input class="form-control" type="text" step="1" min="0" required minlength="1"
-                                           maxlength="120" name="age"
-                                           id="ageNew"
-                                           style="height: 30px; width: 300px; margin: 0 auto"
-                                           placeholder="age"/>
-                                    <br>
-
-
-                                    <label class="font-weight-bold"><b>Role</b></label>
-                                    <br>
-                                    <select id="name_roleNew" name="selectedRoles" size="2" multiple="multiple"
-                                            required>
-                                        <option th:each="role : ${roles}"
-                                                th:value="${role.id}"
-                                                th:text="${role.role}">Role name
-                                        </option>
-                                    </select>
-                                    <br/>
-                                    <div>
-                                        <button type="submit" class="btn btn-success">Add new user</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <!-- the user is at the admin -->

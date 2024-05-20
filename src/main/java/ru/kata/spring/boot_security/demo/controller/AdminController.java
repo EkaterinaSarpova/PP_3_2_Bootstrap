@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -19,38 +20,46 @@ import java.util.Set;
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
+    private final UserValidator userValidator;
 
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService, UserValidator userValidator) {
         this.userService = userService;
         this.roleService = roleService;
+        this.userValidator = userValidator;
     }
 
     @GetMapping()
     public String showAllUsers(Model model, Principal principal) {
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("user", userService.getUserByEmail(principal.getName()));
-        model.addAttribute("formUser", new User());
+        //model.addAttribute("formUser", new User());
         model.addAttribute("roles", roleService.getAllRoles());
         return "index";
     }
 
     @GetMapping("/new")
-    public String addNewUser(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("listRoles", roleService.getAllRoles());
-        return "index";
+    public String addNewUser(Model model, Principal principal, User user) {
+        model.addAttribute("thisUser", userService.getUserByEmail(principal.getName()));
+        //model.addAttribute("user", user);
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "new-user";
     }
 
     @PostMapping("/saveAddUser")
-    public String saveAddUser(@Valid @ModelAttribute("user") User user
-            , @RequestParam("selectedRoles") Long[] selectRoles
-            , BindingResult result) {
+    public String saveAddUser(@ModelAttribute("user") @Valid User user, BindingResult result, Model model, Principal principal,
+            @RequestParam("selectedRoles") Long[] selectRoles) {
 
-        if (!result.hasErrors()) {
+        userValidator.validate(user, result);
+        if (result.hasErrors()) {
+            model.addAttribute("thisUser", userService.getUserByEmail(principal.getName()));
+            //model.addAttribute("user", user);
+            model.addAttribute("roles", roleService.getAllRoles());
+            return "new-user";
+        } else {
             Set<Role> rolesByArrayIds = roleService.getRolesByArrayIds(selectRoles);
             userService.addUser(user, rolesByArrayIds);
+            return "redirect:/admin";
         }
-        return "redirect:/admin";
     }
 
     @PostMapping("/edit")
